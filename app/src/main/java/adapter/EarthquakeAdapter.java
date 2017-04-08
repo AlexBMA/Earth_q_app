@@ -1,6 +1,8 @@
 package adapter;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,8 +50,20 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         // get the current item
         Earthquake currentEarthQuake = getItem(position);
 
+
         //get the Text view
         TextView textViewMagnitude = (TextView) listItemView.findViewById(R.id.eq_mag_number);
+
+        // Set the proper background color on the magnitude circle.
+        // Fetch the background from the TextView, which is a GradientDrawable.
+        GradientDrawable magnitudeCircle = (GradientDrawable) textViewMagnitude.getBackground();
+
+        // Get the appropriate background color based on the current earthquake magnitude
+        int magnitudeColor = getMagnitudeColor(currentEarthQuake.getMagnitude());
+
+        // Set the color on the magnitude circle
+        magnitudeCircle.setColor(magnitudeColor);
+
         //set the text in the Text view
         textViewMagnitude.setText(simpleMagFormat(currentEarthQuake));
 
@@ -81,10 +95,64 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         return listItemView;
     }
 
+
     private String simpleMagFormat(Earthquake currentEarthQuake) {
         DecimalFormat formatter = new DecimalFormat("0.0");
         String output = formatter.format(currentEarthQuake.getMagnitude());
         return output;
+    }
+
+    private int getMagnitudeColor(double magnitude) {
+
+        int magnitude1Color;
+
+        int magnitudeFloor = (int) Math.floor(magnitude);
+
+        switch (magnitudeFloor) {
+            case 0:
+            case 1:
+                magnitude1Color = ContextCompat.getColor(getContext(), R.color.magnitude1);
+                break;
+
+            case 2:
+                magnitude1Color = ContextCompat.getColor(getContext(), R.color.magnitude2);
+                break;
+
+            case 3:
+                magnitude1Color = ContextCompat.getColor(getContext(), R.color.magnitude3);
+                break;
+
+            case 4:
+                magnitude1Color = ContextCompat.getColor(getContext(), R.color.magnitude4);
+                break;
+
+            case 5:
+                magnitude1Color = ContextCompat.getColor(getContext(), R.color.magnitude5);
+                break;
+
+            case 6:
+                magnitude1Color = ContextCompat.getColor(getContext(), R.color.magnitude5);
+                break;
+
+            case 7:
+                magnitude1Color = ContextCompat.getColor(getContext(), R.color.magnitude5);
+                break;
+
+            case 8:
+                magnitude1Color = ContextCompat.getColor(getContext(), R.color.magnitude5);
+                break;
+
+            case 9:
+                magnitude1Color = ContextCompat.getColor(getContext(), R.color.magnitude5);
+                break;
+
+            default:
+                magnitude1Color = ContextCompat.getColor(getContext(), R.color.magnitude10plus);
+                break;
+        }
+
+
+        return magnitude1Color;
     }
 
     private String simpleDateFormat(Earthquake currentEarthQuake) {
