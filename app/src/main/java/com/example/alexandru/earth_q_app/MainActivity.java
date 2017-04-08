@@ -52,10 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //stat the intent
                 startActivity(intent);
-
-
             }
-
 
         });
     }
