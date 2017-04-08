@@ -1,6 +1,7 @@
 package adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.alexandru.earth_q_app.R;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -48,27 +50,81 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
         //get the Text view
         TextView textViewMagnitude = (TextView) listItemView.findViewById(R.id.eq_mag_number);
-
         //set the text in the Text view
-        textViewMagnitude.setText(currentEarthQuake.getMagnitude() + "");
+        textViewMagnitude.setText(simpleMagFormat(currentEarthQuake));
+
 
         //get the Text view
-        TextView textViewTime = (TextView) listItemView.findViewById(R.id.eq_time);
-
-        //format the date
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date tempDate = currentEarthQuake.getDateOfEarthquake();
-
+        TextView textViewDate = (TextView) listItemView.findViewById(R.id.eq_date);
         //set the text in the Text view
-        textViewTime.setText(sdf.format(tempDate));
+        textViewDate.setText(simpleDateFormat(currentEarthQuake));
+
+
+        // get the text view
+        TextView textViewTime = (TextView) listItemView.findViewById(R.id.eq_time);
+        //set the text in the Text view
+        textViewTime.setText(simpleTimeFormat(currentEarthQuake));
 
 
         //get the Text view
         TextView textViewLocation = (TextView) listItemView.findViewById(R.id.eq_location);
         //set the text in the Text view
-        textViewLocation.setText(currentEarthQuake.getLocation().toString());
+        textViewLocation.setText(simpleTextFormatLocationPosition(currentEarthQuake));
+
+
+        //get the Text view
+        TextView textViewLocationPlace = (TextView) listItemView.findViewById(R.id.eq_location_place);
+        //set the text in  the Text view
+        textViewLocationPlace.setText(simpleTextFormatLocationName(currentEarthQuake));
 
 
         return listItemView;
     }
+
+    private String simpleMagFormat(Earthquake currentEarthQuake) {
+        DecimalFormat formatter = new DecimalFormat("0.0");
+        String output = formatter.format(currentEarthQuake.getMagnitude());
+        return output;
+    }
+
+    private String simpleDateFormat(Earthquake currentEarthQuake) {
+        SimpleDateFormat sdf = new SimpleDateFormat("LLL dd, yyyy");
+        Date tempDate = currentEarthQuake.getDateOfEarthquake();
+
+        return sdf.format(tempDate);
+    }
+
+    private String simpleTimeFormat(Earthquake currentEarthQuake) {
+        //format the date
+        SimpleDateFormat sdf2 = new SimpleDateFormat("h:mm a");
+        Date tempTime = currentEarthQuake.getDateOfEarthquake();
+
+        return sdf2.format(tempTime);
+    }
+
+    private String simpleTextFormatLocationName(Earthquake currentEarthQuake) {
+        //format the location string
+        String location = currentEarthQuake.getLocation();
+        String regex = "(of)+";
+        String[] splitString = location.split(regex);
+        //System.out.print(" && "+splitString.length);
+
+
+        if (splitString.length > 1)
+            return splitString[1];
+        else return splitString[0];
+    }
+
+    private String simpleTextFormatLocationPosition(Earthquake currentEarthQuake) {
+        //format the location string
+        String location = currentEarthQuake.getLocation();
+        String regex = "(of)+";
+        String[] splitString = location.split(regex);
+
+        Log.v("**", splitString[0] + " of");
+        if (splitString.length > 1)
+            return splitString[0] + " of";
+        else return "Near the";
+    }
+
 }

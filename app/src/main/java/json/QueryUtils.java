@@ -74,7 +74,7 @@ public class QueryUtils {
                 tempEarthquake = new Earthquake();
                 tempEarthquake.setMagnitude(temp.getDouble("mag"));
                 tempEarthquake.setLocation(temp.getString("place"));
-                tempEarthquake.setDateOfEarthquake(new Date(temp.getInt("time")));
+                tempEarthquake.setDateOfEarthquake(new Date(temp.getLong("time")));
                 listInformation.add(tempEarthquake);
             }
 

@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import adapter.EarthquakeAdapter;
@@ -21,14 +20,6 @@ public class MainActivity extends AppCompatActivity {
 
         //list of earthquakes
         List<Earthquake> listEarthquake = QueryUtils.extractEarthquakes();
-
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-
-
-
-
 
 
         // Find a reference to the {@link ListView} in the layout
