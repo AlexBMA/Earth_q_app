@@ -42,6 +42,11 @@ public class QueryUtils {
     private QueryUtils() {
     }
 
+
+    public static String getSampleJsonResponse() {
+        return SAMPLE_JSON_RESPONSE;
+    }
+
     /**
      * Return a list of {@link Earthquake} objects that has been built up from
      * parsing a JSON response.
@@ -75,6 +80,7 @@ public class QueryUtils {
                 tempEarthquake.setMagnitude(temp.getDouble("mag"));
                 tempEarthquake.setLocation(temp.getString("place"));
                 tempEarthquake.setDateOfEarthquake(new Date(temp.getLong("time")));
+                tempEarthquake.setUrl(temp.getString("url"));
                 listInformation.add(tempEarthquake);
             }
 

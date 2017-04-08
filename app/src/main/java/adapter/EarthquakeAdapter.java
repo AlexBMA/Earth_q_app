@@ -3,7 +3,6 @@ package adapter;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -189,7 +188,7 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         String regex = "(of)+";
         String[] splitString = location.split(regex);
 
-        Log.v("**", splitString[0] + " of");
+        // Log.v("**", splitString[0] + " of");
         if (splitString.length > 1)
             return splitString[0] + " of";
         else return "Near the";

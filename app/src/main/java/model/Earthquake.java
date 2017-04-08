@@ -11,16 +11,18 @@ public class Earthquake {
     private double magnitude;
     private Date dateOfEarthquake;
     private String location;
+    private String url;
 
 
     public Earthquake() {
     }
 
 
-    public Earthquake(double magnitude, Date dateOfEarthquake, String location) {
+    public Earthquake(double magnitude, Date dateOfEarthquake, String location, String url) {
         this.magnitude = magnitude;
         this.dateOfEarthquake = dateOfEarthquake;
         this.location = location;
+        this.url = url;
     }
 
     public double getMagnitude() {
@@ -45,5 +47,13 @@ public class Earthquake {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
