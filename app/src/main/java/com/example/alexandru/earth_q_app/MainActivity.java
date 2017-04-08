@@ -5,13 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import adapter.EarthquakeAdapter;
+import json.QueryUtils;
 import model.Earthquake;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,24 +20,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //list of earthquakes
-        List<Earthquake> listEarthquake = new ArrayList<>();
+        List<Earthquake> listEarthquake = QueryUtils.extractEarthquakes();
 
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date1 = null;
-        Date date2 = null;
-        try {
-            date1 = sdf.parse("2009-12-31");
-            date2 = sdf.parse("2010-01-31");
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
 
-        listEarthquake.add(new Earthquake(4.5, date1, "Roma"));
-        listEarthquake.add(new Earthquake(5.6, date2, "Copenhaga"));
-        listEarthquake.add(new Earthquake(4.3, date1, "Berlin"));
 
 
 
