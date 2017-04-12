@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         List<Earthquake> listEarthquake = extractEarthquakes();
 
 
+
         // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
 
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter1);
+
 
         earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
