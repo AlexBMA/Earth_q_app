@@ -1,5 +1,6 @@
 package json;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.alexandru.earth_q_app.MainActivity;
@@ -75,42 +76,25 @@ public class QueryUtils {
         // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
         // is formatted, a JSONException exception object will be thrown.
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
+
+
+        // TODO: Parse the response given by the SAMPLE_JSON_RESPONSE string and
+        // build up a list of Earthquake objects with the corresponding data.
+
+        String link = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=2014-01-02";
+        URL url = createUrl(link);
+
+        // Perform HTTP request to the URL and receive a JSON response back
+        String jsonResponse = "";
+
         try {
+            jsonResponse = getInfo(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            // TODO: Parse the response given by the SAMPLE_JSON_RESPONSE string and
-            // build up a list of Earthquake objects with the corresponding data.
-
-            String link = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=2014-01-02";
-            URL url = createUrl(link);
-
-            // Perform HTTP request to the URL and receive a JSON response back
-            String jsonResponse = "";
-
-            try {
-                jsonResponse = getInfo(url);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            JSONObject objectRoot = new JSONObject(jsonResponse);
-
-            JSONArray earthQuakeArray = objectRoot.getJSONArray("features");
-
-            JSONObject temp;
-            int size = earthQuakeArray.length();
-
-
-            Earthquake tempEarthquake;
-            for (int i = 0; i < size; i++) {
-                temp = earthQuakeArray.getJSONObject(i).getJSONObject("properties");
-                tempEarthquake = new Earthquake();
-                tempEarthquake.setMagnitude(temp.getDouble("mag"));
-                tempEarthquake.setLocation(temp.getString("place"));
-                tempEarthquake.setDateOfEarthquake(new Date(temp.getLong("time")));
-                tempEarthquake.setUrl(temp.getString("url"));
-                listInformation.add(tempEarthquake);
-            }
-
-
+        try {
+            extractInfoFromJSON(jsonResponse, listInformation);
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
@@ -122,6 +106,32 @@ public class QueryUtils {
         return listInformation;
     }
 
+    /**
+     * Extract the right information from the json
+     */
+    private static void extractInfoFromJSON(String jsonResponseEarthquake, List<Earthquake> listInformation) throws JSONException {
+
+        if (TextUtils.isEmpty(jsonResponseEarthquake)) {
+            return;
+        }
+
+        JSONObject objectRoot = new JSONObject(jsonResponseEarthquake);
+        JSONArray earthQuakeArray = objectRoot.getJSONArray("features");
+
+        JSONObject temp;
+        int size = earthQuakeArray.length();
+
+        Earthquake tempEarthquake;
+        for (int i = 0; i < size; i++) {
+            temp = earthQuakeArray.getJSONObject(i).getJSONObject("properties");
+            tempEarthquake = new Earthquake();
+            tempEarthquake.setMagnitude(temp.getDouble("mag"));
+            tempEarthquake.setLocation(temp.getString("place"));
+            tempEarthquake.setDateOfEarthquake(new Date(temp.getLong("time")));
+            tempEarthquake.setUrl(temp.getString("url"));
+            listInformation.add(tempEarthquake);
+        }
+    }
 
     /**
      * Returns new URL object from the given string URL.
@@ -142,6 +152,12 @@ public class QueryUtils {
      */
     private static String getInfo(URL url) throws IOException {
         String jsonResponse = "";
+
+        if (url == null) {
+            return jsonResponse;
+        }
+
+
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
 
@@ -151,8 +167,15 @@ public class QueryUtils {
             urlConnection.setReadTimeout(10000 /* milliseconds */);
             urlConnection.setConnectTimeout(15000 /* milliseconds */);
             urlConnection.connect();
-            inputStream = urlConnection.getInputStream();
-            jsonResponse = readFromStream(inputStream);
+
+            //if it was successful response code 200
+            // the read the input steam
+            if (urlConnection.getResponseCode() == 200) {
+                inputStream = urlConnection.getInputStream();
+                jsonResponse = readFromStream(inputStream);
+            }
+
+
         } catch (IOException e) {
             // TODO: Handle the exception
         } finally {
