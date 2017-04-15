@@ -73,19 +73,12 @@ public class QueryUtils {
         // Create an empty ArrayList that we can start adding earthquakes to
         List<Earthquake> listInformation = new ArrayList<>();
 
-        // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
-        // is formatted, a JSONException exception object will be thrown.
-        // Catch the exception so the app doesn't crash, and print the error message to the logs.
-
-
-        // TODO: Parse the response given by the SAMPLE_JSON_RESPONSE string and
-        // build up a list of Earthquake objects with the corresponding data.
-
         String link = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=2014-01-02";
         URL url = createUrl(link);
 
         // Perform HTTP request to the URL and receive a JSON response back
         String jsonResponse = "";
+
 
         try {
             jsonResponse = getInfo(url);
@@ -93,14 +86,13 @@ public class QueryUtils {
             e.printStackTrace();
         }
 
+
         try {
             extractInfoFromJSON(jsonResponse, listInformation);
         } catch (JSONException e) {
-            // If an error is thrown when executing any of the above statements in the "try" block,
-            // catch the exception here, so the app doesn't crash. Print a log message
-            // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the earthquake JSON results", e);
+            e.printStackTrace();
         }
+
 
         // Return the list of earthquakes
         return listInformation;
@@ -115,22 +107,31 @@ public class QueryUtils {
             return;
         }
 
-        JSONObject objectRoot = new JSONObject(jsonResponseEarthquake);
-        JSONArray earthQuakeArray = objectRoot.getJSONArray("features");
+        try {
+            JSONObject objectRoot = new JSONObject(jsonResponseEarthquake);
+            JSONArray earthQuakeArray = objectRoot.getJSONArray("features");
 
-        JSONObject temp;
-        int size = earthQuakeArray.length();
+            JSONObject temp;
+            int size = earthQuakeArray.length();
 
-        Earthquake tempEarthquake;
-        for (int i = 0; i < size; i++) {
-            temp = earthQuakeArray.getJSONObject(i).getJSONObject("properties");
-            tempEarthquake = new Earthquake();
-            tempEarthquake.setMagnitude(temp.getDouble("mag"));
-            tempEarthquake.setLocation(temp.getString("place"));
-            tempEarthquake.setDateOfEarthquake(new Date(temp.getLong("time")));
-            tempEarthquake.setUrl(temp.getString("url"));
-            listInformation.add(tempEarthquake);
+            Earthquake tempEarthquake;
+            for (int i = 0; i < size; i++) {
+                temp = earthQuakeArray.getJSONObject(i).getJSONObject("properties");
+                tempEarthquake = new Earthquake();
+                tempEarthquake.setMagnitude(temp.getDouble("mag"));
+                tempEarthquake.setLocation(temp.getString("place"));
+                tempEarthquake.setDateOfEarthquake(new Date(temp.getLong("time")));
+                tempEarthquake.setUrl(temp.getString("url"));
+                listInformation.add(tempEarthquake);
+            }
+        } catch (JSONException e) {
+            // If an error is thrown when executing any of the above statements in the "try" block,
+            // catch the exception here, so the app doesn't crash. Print a log message
+            // with the message from the exception.
+            Log.e(LOG_TAG, "Problem parsing the earthquake JSON results", e);
         }
+
+
     }
 
     /**
@@ -173,11 +174,14 @@ public class QueryUtils {
             if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
+            } else {
+                Log.e(LOG_TAG, "STATUS CODE: " + urlConnection.getResponseCode());
             }
 
 
         } catch (IOException e) {
-            // TODO: Handle the exception
+
+            Log.e(LOG_TAG, "Problem getting the earthquake JSON results", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
