@@ -42,7 +42,7 @@ public class DownloadFromApi extends AsyncTask<URL, Void, String> {
     protected String doInBackground(URL... params) {
         String jsonResponse = "";
 
-        if (params == null) {
+        if (params == null || params[0] == null) {
             return jsonResponse;
         }
 
