@@ -67,12 +67,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<List<Earthquake>> onCreateLoader(int id, Bundle args) {
-
+        //Log.e("LOADER_CREATE","  ##");
         return new EarthquakeLoader(MainActivity.this, USGS_REQUEST_URL);
     }
 
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> data) {
+
+        // Log.e("LOADER_FINISHED","  %%");
 
         // Clear the adapter of previous earthquake data
         earthAdapter.clear();
@@ -88,5 +90,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<List<Earthquake>> loader) {
         // Loader reset, so we can clear out our existing data.
         earthAdapter.clear();
+        // Log.e("LOADER_RESET","  **");
+
     }
 }
