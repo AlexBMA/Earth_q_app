@@ -32,10 +32,14 @@ import model.Earthquake;
 public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
 
 
-    public static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    public EarthquakeLoader(Context context) {
+    private String myUrl = "";
+
+    public EarthquakeLoader(Context context, String url) {
+
         super(context);
+        myUrl = url;
     }
 
     @Override
@@ -48,8 +52,7 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
     public List<Earthquake> loadInBackground() {
 
 
-        final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=5&limit=10";
-        URL url = createUrl(USGS_REQUEST_URL);
+        URL url = createUrl(myUrl);
 
         // Perform HTTP request to the URL and receive a JSON response back
         String jsonResponse = "";

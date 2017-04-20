@@ -20,7 +20,8 @@ import model.Earthquake;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
 
-    ArrayAdapter<Earthquake> adapter1;
+    private final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=5&limit=10";
+    private ArrayAdapter<Earthquake> earthAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +37,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
 
         // Create a new {@link ArrayAdapter} of earthquakes
-        adapter1 = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
+        earthAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
-        earthquakeListView.setAdapter(adapter1);
+        earthquakeListView.setAdapter(earthAdapter);
 
         getLoaderManager().initLoader(0, null, this);
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 //get the current selected item
-                Earthquake earthquake = adapter1.getItem(position);
+                Earthquake earthquake = earthAdapter.getItem(position);
 
                 //creates the intent
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -67,16 +68,25 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<List<Earthquake>> onCreateLoader(int id, Bundle args) {
 
-        return new EarthquakeLoader(MainActivity.this);
+        return new EarthquakeLoader(MainActivity.this, USGS_REQUEST_URL);
     }
 
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> data) {
-        adapter1.addAll(data);
+
+        // Clear the adapter of previous earthquake data
+        earthAdapter.clear();
+
+        // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
+        // data set. This will trigger the ListView to update.
+        if (data != null && !data.isEmpty()) {
+            earthAdapter.addAll(data);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<List<Earthquake>> loader) {
-        adapter1.clear();
+        // Loader reset, so we can clear out our existing data.
+        earthAdapter.clear();
     }
 }
