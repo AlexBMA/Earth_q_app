@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Earth_q_app</string>
+    <string name="app_name">Earthquake app</string>
+    <string name="no_earthquakes">No earthquakes</string>
 </resources>

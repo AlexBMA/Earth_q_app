@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=5&limit=10";
     private ArrayAdapter<Earthquake> earthAdapter;
+    /**
+     * TextView that is displayed when the list is empty
+     */
+    private TextView mEmptyStateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         // Create a new {@link ArrayAdapter} of earthquakes
         earthAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
+
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        earthquakeListView.setEmptyView(mEmptyStateTextView);
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
@@ -75,6 +83,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> data) {
 
         // Log.e("LOADER_FINISHED","  %%");
+
+        // Hide loading indicator because the data has been loaded
+        View loadingIndicator = findViewById(R.id.loading_indicator);
+        loadingIndicator.setVisibility(View.GONE);
+
+        mEmptyStateTextView.setText(R.string.no_earthquakes);
 
         // Clear the adapter of previous earthquake data
         earthAdapter.clear();
