@@ -24,6 +24,7 @@ import model.Earthquake;
 
 public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
+
     public EarthquakeAdapter(Context context, List<Earthquake> list) {
 
 

@@ -70,8 +70,8 @@ public class QueryUtils {
         // Create an empty ArrayList that we can start adding earthquakes to
         List<Earthquake> listInformation = new ArrayList<>();
 
-        String link = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=2014-01-02";
-        URL url = createUrl(link);
+        final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=5&limit=10";
+        URL url = createUrl(USGS_REQUEST_URL);
 
         // Perform HTTP request to the URL and receive a JSON response back
         String jsonResponse = "";
