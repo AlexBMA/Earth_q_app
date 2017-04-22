@@ -2,6 +2,7 @@ package loaderpack;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -35,11 +36,13 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private String myUrl = "";
+    private String myMinMag = "";
 
-    public EarthquakeLoader(Context context, String url) {
+    public EarthquakeLoader(Context context, String url, String minMag) {
 
         super(context);
         myUrl = url;
+        myMinMag = minMag;
     }
 
     @Override
@@ -52,7 +55,7 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
     public List<Earthquake> loadInBackground() {
 
 
-        URL url = createUrl(myUrl);
+        URL url = createUrl(myUrl, myMinMag);
 
         // Perform HTTP request to the URL and receive a JSON response back
         String jsonResponse = "";
@@ -191,10 +194,20 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
         return output.toString();
     }
 
-    private URL createUrl(String stringUrl) {
+    private URL createUrl(String stringUrl, String myMinMag) {
         URL url = null;
         try {
-            url = new URL(stringUrl);
+            Uri baseUri = Uri.parse(stringUrl);
+            Uri.Builder uriBuilder = baseUri.buildUpon();
+            uriBuilder.appendQueryParameter("format", "geojson");
+            // uriBuilder.appendQueryParameter("orderby", "time");
+            uriBuilder.appendQueryParameter("minmag", myMinMag);
+            uriBuilder.appendQueryParameter("limit", "12");
+
+
+            url = new URL(uriBuilder.toString());
+            String test = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmag=6&limit=12";
+            Log.e("URL", test);
         } catch (MalformedURLException exception) {
             Log.e(LOG_TAG, "Error with creating URL", exception);
             return null;
