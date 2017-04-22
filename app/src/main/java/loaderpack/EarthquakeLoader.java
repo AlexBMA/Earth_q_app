@@ -2,7 +2,6 @@ package loaderpack;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -38,12 +37,13 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
     private String myUrl = "";
     private String myMinMag = "";
 
-    public EarthquakeLoader(Context context, String url, String minMag) {
+    public EarthquakeLoader(Context context, String url) {
 
         super(context);
         myUrl = url;
-        myMinMag = minMag;
+
     }
+
 
     @Override
     protected void onStartLoading() {
@@ -55,7 +55,7 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
     public List<Earthquake> loadInBackground() {
 
 
-        URL url = createUrl(myUrl, myMinMag);
+        URL url = createUrl(myUrl);
 
         // Perform HTTP request to the URL and receive a JSON response back
         String jsonResponse = "";
@@ -147,7 +147,9 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
             urlConnection.setRequestMethod("GET");
             urlConnection.setReadTimeout(10000 /* milliseconds */);
             urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.setInstanceFollowRedirects(true);
             urlConnection.connect();
+
 
             //if it was successful response code 200
             // the read the input steam
@@ -194,20 +196,11 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
         return output.toString();
     }
 
-    private URL createUrl(String stringUrl, String myMinMag) {
+    private URL createUrl(String stringUrl) {
         URL url = null;
         try {
-            Uri baseUri = Uri.parse(stringUrl);
-            Uri.Builder uriBuilder = baseUri.buildUpon();
-            uriBuilder.appendQueryParameter("format", "geojson");
-            // uriBuilder.appendQueryParameter("orderby", "time");
-            uriBuilder.appendQueryParameter("minmag", myMinMag);
-            uriBuilder.appendQueryParameter("limit", "12");
-
-
-            url = new URL(uriBuilder.toString());
-            String test = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmag=6&limit=12";
-            Log.e("URL", test);
+            url = new URL(stringUrl);
+            Log.e("URL to get from", url.toString());
         } catch (MalformedURLException exception) {
             Log.e(LOG_TAG, "Error with creating URL", exception);
             return null;
