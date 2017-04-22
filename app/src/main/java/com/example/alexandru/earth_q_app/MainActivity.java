@@ -29,8 +29,13 @@ import model.Earthquake;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
 
+
+    private static final String LOG_TAG = MainActivity.class.getName();
+
     private static final int EARTHQUAKE_LOADER_ID = 1;
+
     private static final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query";
+
     private ArrayAdapter<Earthquake> earthAdapter;
     /**
      * TextView that is displayed when the list is empty
@@ -42,9 +47,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //list of earthquakes
-        //List<Earthquake> listEarthquake = extractEarthquakes();
 
 
 
@@ -108,10 +110,28 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(LOG_TAG, "On RESUME");
+        LoaderManager loaderManager = getLoaderManager();
+
+        loaderManager.restartLoader(EARTHQUAKE_LOADER_ID, null, this);
+
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e(LOG_TAG, "On STOP");
+
+    }
+
 
     @Override
     public Loader<List<Earthquake>> onCreateLoader(int id, Bundle args) {
-        //Log.e("LOADER_CREATE","  ##");
+        Log.e("LOADER_CREATE", "  ##");
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String minMagnitude = sharedPrefs.getString(
                 getString(R.string.settings_min_magnitude_key),
@@ -119,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         Uri baseUri = Uri.parse(USGS_REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
+
         uriBuilder.appendQueryParameter("format", "geojson");
         uriBuilder.appendQueryParameter("orderby", "time");
         uriBuilder.appendQueryParameter("minmag", minMagnitude);
@@ -132,21 +153,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> data) {
 
+
         Log.e("LOADER_FINISHED", "  %%");
-
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String minMagnitude = sharedPrefs.getString(
-                getString(R.string.settings_min_magnitude_key),
-                getString(R.string.settings_min_magnitude_default));
-        Uri baseUri = Uri.parse(USGS_REQUEST_URL);
-        Uri.Builder uriBuilder = baseUri.buildUpon();
-        uriBuilder.appendQueryParameter("format", "geojson");
-        uriBuilder.appendQueryParameter("orderby", "time");
-        uriBuilder.appendQueryParameter("minmag", minMagnitude);
-        uriBuilder.appendQueryParameter("limit", "12");
-
-        Log.e("MAG RESET", minMagnitude);
-        Log.e("USGS", uriBuilder.toString());
 
         // Hide loading indicator because the data has been loaded
         View loadingIndicator = findViewById(R.id.loading_indicator);
@@ -167,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<List<Earthquake>> loader) {
-
+        Log.e("LOADER_RESET", "  %%");
 
         // Loader reset, so we can clear out our existing data.
         earthAdapter.clear();

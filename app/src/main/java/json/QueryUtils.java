@@ -65,12 +65,12 @@ public class QueryUtils {
      * parsing a JSON response.
      */
 
-    public static List<Earthquake> extractEarthquakes() {
+    public static List<Earthquake> extractEarthquakes(String urltext) {
 
         // Create an empty ArrayList that we can start adding earthquakes to
         List<Earthquake> listInformation = new ArrayList<>();
 
-        final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=5&limit=10";
+        final String USGS_REQUEST_URL = urltext;
         URL url = createUrl(USGS_REQUEST_URL);
 
         // Perform HTTP request to the URL and receive a JSON response back

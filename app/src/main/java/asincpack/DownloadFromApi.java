@@ -90,6 +90,6 @@ public class DownloadFromApi extends AsyncTask<URL, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        Log.v(LOG_TAG, s);
+        Log.v(LOG_TAG, "*****" + s);
     }
 }

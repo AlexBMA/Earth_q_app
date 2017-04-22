@@ -47,13 +47,15 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
 
     @Override
     protected void onStartLoading() {
+
+        Log.e("url in start", myUrl);
         forceLoad();
     }
 
 
     @Override
     public List<Earthquake> loadInBackground() {
-
+        if (myUrl == null) return null;
 
         URL url = createUrl(myUrl);
 
@@ -73,12 +75,11 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
             List<Earthquake> listInformation = new ArrayList<>();
             extractInfoFromJSON(jsonResponse, listInformation);
 
-            Log.v(LOG_TAG, "Here");
+            Log.v(LOG_TAG, "Here after the info was gotten");
             return listInformation;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -124,14 +125,14 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
             return jsonResponse;
         }
 
-        jsonResponse = doInBackground(new URL[]{url});
+        jsonResponse = makeHTTPRequest(new URL[]{url});
 
         return jsonResponse;
 
     }
 
 
-    private String doInBackground(URL... params) {
+    private String makeHTTPRequest(URL... params) {
         String jsonResponse = "";
 
         if (params == null || params[0] == null) {
