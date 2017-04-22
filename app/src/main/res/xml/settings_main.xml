@@ -9,4 +9,11 @@
         android:selectAllOnFocus="true"
         android:title="@string/settings_min_magnitude_label" />
 
+    <EditTextPreference
+        android:defaultValue="@string/settings_min_results_default"
+        android:inputType="number"
+        android:key="@string/settings_min_results_key"
+        android:selectAllOnFocus="false"
+        android:title="@string/settings_min_results_label" />
+
 </PreferenceScreen>

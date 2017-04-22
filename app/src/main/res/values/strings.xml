@@ -13,4 +13,8 @@
     <string name="settings_min_magnitude_default" translatable="false">5</string>
 
 
+    <string name="settings_min_results_label">Number Of Results</string>
+    <string name="settings_min_results_key" translatable="false">min_results</string>
+    <string name="settings_min_results_default" translatable="false">10</string>
+
 </resources>

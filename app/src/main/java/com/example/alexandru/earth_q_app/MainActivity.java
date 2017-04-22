@@ -137,13 +137,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 getString(R.string.settings_min_magnitude_key),
                 getString(R.string.settings_min_magnitude_default));
 
+        String minResults = sharedPrefs.getString(
+                getString(R.string.settings_min_results_key),
+                getString(R.string.settings_min_results_default)
+        );
+
         Uri baseUri = Uri.parse(USGS_REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
         uriBuilder.appendQueryParameter("format", "geojson");
         uriBuilder.appendQueryParameter("orderby", "time");
         uriBuilder.appendQueryParameter("minmag", minMagnitude);
-        uriBuilder.appendQueryParameter("limit", "12");
+        uriBuilder.appendQueryParameter("limit", minResults);
 
         Log.e("MAG", minMagnitude);
         Log.e("USGS", uriBuilder.toString());
